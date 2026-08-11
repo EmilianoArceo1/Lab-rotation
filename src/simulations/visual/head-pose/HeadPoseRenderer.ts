@@ -1,8 +1,8 @@
 import * as THREE from 'three';
-import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import type { Matrix3 } from '../../../math/types';
 import { createAxes } from '../../../visualization/three/axes';
 import { disposeObject } from '../../../visualization/three/disposal';
+import { loadNeutralHead } from '../../../visualization/three/loadNeutralHead';
 import { ThreeScene } from '../../../visualization/three/ThreeScene';
 
 /** A lightweight anatomical bust assembled entirely from Three.js primitives. */
@@ -30,32 +30,23 @@ export class HeadPoseRenderer {
   /** Replaces the lightweight fallback with a licensed high-detail head scan. */
   private async loadScannedHead(): Promise<void> {
     try {
-      const asset = await new GLTFLoader().loadAsync(
-        `${import.meta.env.BASE_URL}models/lee-perry-smith/LeePerrySmith.glb`,
-      );
+      const loaded = await loadNeutralHead();
+      const asset = { scene: loaded.scene };
       if (this.destroyed) {
         disposeObject(asset.scene);
         return;
       }
       asset.scene.updateMatrixWorld(true);
-      const sourceBounds = new THREE.Box3().setFromObject(asset.scene);
+      const sourceBounds = loaded.bounds;
       const sourceSize = sourceBounds.getSize(new THREE.Vector3());
       const neckJointY = sourceBounds.min.y + sourceSize.y * 0.36;
       const fixedAsset = asset.scene.clone(true);
       fixedAsset.traverse((object) => {
         if (object instanceof THREE.Mesh) object.geometry = object.geometry.clone();
       });
-      const neutralMaterial = new THREE.MeshPhysicalMaterial({
-        color: 0x9da2a6,
-        roughness: 0.72,
-        metalness: 0,
-        clearcoat: 0.08,
-        clearcoatRoughness: 0.8,
-      });
+      const neutralMaterial = loaded.material;
       asset.scene.traverse((object) => {
         if (object instanceof THREE.Mesh) {
-          const sourceMaterials = Array.isArray(object.material) ? object.material : [object.material];
-          sourceMaterials.forEach((material) => material.dispose());
           object.material = neutralMaterial;
           this.keepTriangles(object, neckJointY, true);
           object.castShadow = true;

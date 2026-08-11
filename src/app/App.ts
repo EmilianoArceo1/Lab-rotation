@@ -12,5 +12,5 @@ export class App {
     this.route();
   }
   private required(selector: string): HTMLElement { const element=this.root.querySelector<HTMLElement>(selector);if(!element)throw new Error(`Missing ${selector}`);return element; }
-  private route(): void { const slug=location.hash.replace(/^#\/?/,'')||'visual/head-pose';const module=simulationRegistry.findBySlug(slug)??simulationRegistry.list()[0];if(module)this.runner.load(module); }
+  private route(): void { const slug=location.hash.replace(/^#\/?/,'')||'visual/head-pose';const module=simulationRegistry.findBySlug(slug)??simulationRegistry.list()[0];if(module){document.body.dataset.simulation=module.metadata.id;const title=this.root.querySelector('h1'),topic=this.root.querySelector('.topic'),lede=this.root.querySelector('.lede'),explanation=this.root.querySelector<HTMLElement>('.explanation');if(title)title.textContent=module.metadata.title;if(topic)topic.textContent=module.metadata.topic;if(lede)lede.textContent=module.metadata.description;if(explanation)explanation.hidden=module.metadata.id!=='head-pose-rotation';this.runner.load(module);} }
 }
