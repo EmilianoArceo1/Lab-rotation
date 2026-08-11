@@ -62,7 +62,7 @@ export class GazeFeatureSimulation implements SimulationModule {
     this.renderer = new GazeRenderer(context.viewport);
     context.viewport.insertAdjacentHTML(
       "beforeend",
-      '<div class="gaze-key"><span class="left-eye">Left gaze</span><span class="right-eye">Right gaze</span></div>',
+      '<div class="gaze-key"><span class="left-eye">Left gaze</span><span class="right-eye">Right gaze</span></div><div class="gaze-vector-readout"><b>g(t) = [x, y, z]ᵀ</b><span class="left-eye"></span><span class="right-eye"></span><small><i>X</i> horizontal · <i>Y</i> vertical · <i>Z</i> forward</small></div>',
     );
     const modeLabel = document.createElement("label");
     modeLabel.className = "select-control";
@@ -142,11 +142,17 @@ export class GazeFeatureSimulation implements SimulationModule {
     });
     const stats = shell.querySelector<HTMLElement>(".stat-values")!,
       vectors = shell.querySelector<HTMLElement>(".current-vectors")!,
-      features = shell.querySelector<HTMLElement>(".feature-vector")!;
+      features = shell.querySelector<HTMLElement>(".feature-vector")!,
+      readout = context.viewport.querySelector<HTMLElement>(
+        ".gaze-vector-readout",
+      )!;
     this.refresh = () => {
       const left = gazeVector(this.left.h, this.left.v),
         right = gazeVector(this.right.h, this.right.v);
       this.renderer?.setGaze(left, right);
+      const readoutLines = readout.querySelectorAll<HTMLElement>("span");
+      readoutLines[0].textContent = `gL = [${left.map((v) => v.toFixed(3)).join(", ")}]ᵀ`;
+      readoutLines[1].textContent = `gR = [${right.map((v) => v.toFixed(3)).join(", ")}]ᵀ`;
       vectors.innerHTML = `<span>gL = [${left.map((v) => v.toFixed(3)).join(", ")}]</span><span>gR = [${right.map((v) => v.toFixed(3)).join(", ")}]</span>`;
       const values = this.samples[this.selected];
       if (values.length) {
