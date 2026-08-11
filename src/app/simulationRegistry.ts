@@ -1,0 +1,3 @@
+import type { SimulationModule } from '../core/simulation/types';
+class SimulationRegistry { private modules=new Map<string,SimulationModule>(); register(module:SimulationModule):void { if(this.modules.has(module.metadata.id))throw new Error(`Duplicate simulation: ${module.metadata.id}`); this.modules.set(module.metadata.id,module); } get(id:string):SimulationModule|undefined{return this.modules.get(id);} findBySlug(slug:string):SimulationModule|undefined{return [...this.modules.values()].find(m=>m.metadata.slug===slug);} list():readonly SimulationModule[]{return [...this.modules.values()];} }
+export const simulationRegistry=new SimulationRegistry();

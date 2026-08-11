@@ -1,0 +1,4 @@
+import { AnimationLoop } from '../animation/AnimationLoop';
+import { DisposableEvents } from '../events/DisposableEvents';
+import type { SimulationModule } from './types';
+export class SimulationRunner { private current:SimulationModule|null=null; private events:DisposableEvents|null=null; private animation:AnimationLoop|null=null; constructor(private viewport:HTMLElement,private controls:HTMLElement,private content:HTMLElement){} load(module:SimulationModule):void { this.unload();this.viewport.replaceChildren();this.controls.replaceChildren();this.content.replaceChildren();this.events=new DisposableEvents();this.animation=new AnimationLoop();this.current=module;module.mount({viewport:this.viewport,controls:this.controls,content:this.content,events:this.events,animation:this.animation});} unload():void{this.animation?.stop();this.current?.destroy();this.events?.dispose();this.current=null;this.events=null;this.animation=null;} }

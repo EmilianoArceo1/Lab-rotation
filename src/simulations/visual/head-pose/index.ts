@@ -1,0 +1,1 @@
+export { HeadPoseSimulation } from './HeadPoseSimulation';
