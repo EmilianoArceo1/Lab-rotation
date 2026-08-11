@@ -28,6 +28,10 @@ npm run build
 
 Open `/#/visual/head-pose`.
 
+### Notion embed
+
+Use the compact embed URL `https://emilianoarceo1.github.io/Lab-rotation/?embed=1#/visual/head-pose` in a Notion `/embed` block. This mode removes site chrome and long-form explanations, keeps the visualization dominant, and places controls and live mathematics in a responsive sidebar.
+
 ## Adding a simulation
 
 1. Create a directory under `src/simulations/<modality>`.
