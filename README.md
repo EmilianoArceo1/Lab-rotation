@@ -17,6 +17,8 @@ The head-pose module uses right-handed active rotations with `R = Rz(roll) Ry(ya
 
 The detailed head is **Infinite, 3D Head Scan** by Lee Perry-Smith, licensed under [CC BY 3.0](https://creativecommons.org/licenses/by/3.0/), sourced from the official Three.js example assets. The original license is included at `public/models/lee-perry-smith/LICENSE.txt`. A procedural primitive head remains as the loading/error fallback.
 
+The gaze module uses the independent eyeball model from [blackears/godot_eyeball_shader](https://github.com/blackears/godot_eyeball_shader), licensed under MIT. Its license is included at `public/models/eyeball/LICENSE.txt`. The lab supplies its own WebGL materials while preserving the model's separate eyeball, cornea, and posterior geometry.
+
 ## Run, test, and build
 
 ```bash
